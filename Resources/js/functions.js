@@ -181,3 +181,30 @@ $("#nuevatareaform").on('submit', function (evt) {
         }
     });
 });
+
+/**
+ * Funciones en la pestania calificaciones 
+ */
+
+ $("#guardarnotas").click(function(){
+    $('.input_puntos').each(function() {//recorrer cada input
+
+        var saved = $(this).attr("data-puntaje_actual");
+        var newx = $(this).val();
+
+        var alumno = $(this).parents("#fila").find("#nombrealumno").text();
+
+        if(saved != newx){
+            if(saved == '' & newx != ''){
+                console.log(alumno + ", crear nuevo valor");
+                $(this).attr("data-puntaje_actual", newx);
+            }else if(newx == '' & saved != ""){
+                console.log(alumno + ", eliminar la nota");
+                $(this).attr("data-puntaje_actual", newx);
+            }else if(saved != "" & newx != saved){
+                console.log(alumno + ", actualizar nota");
+                $(this).attr("data-puntaje_actual", newx);
+            }
+        }
+    });
+ });

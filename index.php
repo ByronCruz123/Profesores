@@ -7,10 +7,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
     <link rel="stylesheet" type="text/css" href="resources/css/login.css">
     <link rel="stylesheet" type="text/css" href="resources/css/styles.css">
-
-    </head>
+  </head>
 <body>
-
   <div class="modal-dialog text-center">
     <div class="col-sm-9 main-section">
       <div class="modal-content">
@@ -31,7 +29,7 @@
             <a id="ingresar" class="btn btn-primary" type="button">
                 <span class="px-4">Entrar</span>
             </a>
-
+            <input type="hidden" value="<?php  echo isset($_GET['cod']) ? $_GET['cod'] : ''; ?>" id="mensaje">
           </form>
         </div>
       </div>
@@ -40,5 +38,19 @@
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="resources/js/functions.js"></script>
+
+<script>
+  $(document).ready(function(){
+    var cod = $('#mensaje').val();
+
+    if(cod.length > 0 ){
+      if(cod == 1){
+        alert('El inicio de sesion es obligatorio');
+      }else if(cod == 2){
+        alert('');
+      }
+    }
+  });
+</script>
 </html>
 
