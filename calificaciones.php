@@ -83,7 +83,7 @@ if (!isset($_SESSION['user'])) {
         <h4 class="titulotarea mt-3"><?php echo $datostarea['titulo']; ?></h4>
         <span class="pt-4">
             <?php echo $datostarea['puntos']; ?> puntos
-            <button id="guardarnotas">Actualizar notas</button>
+            <button id="guardarnotas" data-idtarea="<?php echo $_GET['tarea']?>">Actualizar notas</button>
         </span>
         <div class="tarea mt-2">
             <table class="table">
@@ -102,18 +102,24 @@ if (!isset($_SESSION['user'])) {
                     while ($alumno = mysqli_fetch_array($sql2)) { ?>
                         <tr id="fila">
                             <th scope="row"><?php echo $contador++; ?></th>
-                            <td id="nombrealumno"><?php echo $alumno['nombre'] ?></td>
+                            <td id="alumno" data-id="<?php echo $alumno['id'] ?>"><?php echo $alumno['nombre'] ?></td>
                             <td>
                                 <div class="form-group">
                                     <?php 
                                         $idalumno = $alumno['id'];
-                                        $sqlnota = mysqli_query($con, "SELECT puntos FROM notas Where id_alumno = $idalumno and id_tarea = $idtarea");
+                                        $sqlnota = mysqli_query($con,  "SELECT puntos 
+                                                                        FROM notas 
+                                                                        Where id_alumno = $idalumno and id_tarea = $idtarea");
                                         $puntos = '';
                                         if(mysqli_num_rows($sqlnota) > 0 ){     
                                             $puntos = mysqli_fetch_assoc($sqlnota)['puntos'];
                                         }
                                     ?>
-                                    <input  type="number" data-puntaje_actual="<?php echo $puntos;?>" max="<?php echo $datostarea['puntos']; ?>" value="<?php echo $puntos; ?>"  class="form-control input_puntos"  name="puntos[]">
+                                    <input  type="number" 
+                                            data-puntaje_actual="<?php echo $puntos;?>" 
+                                            max="<?php echo $datostarea['puntos']; ?>" 
+                                            value="<?php echo $puntos; ?>"  
+                                            class="form-control input_puntos">
                                 </div>
                             </td>
                         </tr>
@@ -162,11 +168,10 @@ if (!isset($_SESSION['user'])) {
         </div>
     </div>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="resources/js/jquery.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
-<script src="resources/js/bootstrap-notify-3.1.3/bootstrap-notify.js"></script>
-<script src="resources/js/functions.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+    <script src="resources/js/bootstrap-notify-3.1.3/bootstrap-notify.js"></script>
+    <script src="resources/js/functions.js"></script>
 </html>

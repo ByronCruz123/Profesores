@@ -25,8 +25,7 @@
             <div class="form-group">
               <input type="password" class="form-control" name="pass" placeholder="Contraseña" required>
             </div>
-
-            <a id="ingresar" class="btn btn-primary" type="button">
+            <a id="login-button" class="btn btn-primary" type="button">
                 <span class="px-4">Entrar</span>
             </a>
             <input type="hidden" value="<?php  echo isset($_GET['cod']) ? $_GET['cod'] : ''; ?>" id="mensaje">

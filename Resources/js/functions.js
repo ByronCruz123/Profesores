@@ -20,7 +20,7 @@ $(document).ready(function () {
     /**
      * Metodo de verificacion de usario, (login)
      */
-    $("#ingresar").click(function () {
+    $("#login-button").click(function () {
         var boton = $(this);
         var estilos1 = { 'background': '#007bff', 'border-color': '#007bff' };
         var estilos2 = { 'background': '#166087', 'border-color': '#166087' };
@@ -39,6 +39,7 @@ $(document).ready(function () {
                 alert("No se pudo obtner informacion del servidor");
             },
             success: function (res) {
+                alert(res);
                 if (res == 'correcto') {
                     setTimeout(
                         function () {
@@ -60,7 +61,7 @@ $(document).ready(function () {
  * Funciones Pagina Principal
  */
 /**
- * Unicamente cargara la lista de libros
+ * Unicamente cargara la lista de clases 
  */
 function cargarclases() {
     $.ajax({
@@ -71,7 +72,6 @@ function cargarclases() {
         }
     });
 }
-cargarclases();
 
 //CREAR NUEVA CLASE
 $("#nuevaclaseform").on('submit', function (evt) {
@@ -187,24 +187,76 @@ $("#nuevatareaform").on('submit', function (evt) {
  */
 
  $("#guardarnotas").click(function(){
+    var MyArray = [];
+    var idtarea = $(this).attr("data-idtarea");
+
     $('.input_puntos').each(function() {//recorrer cada input
+        var saved = $(this).attr("data-puntaje_actual");//valor predefinido (guardado en la db)
+        var newx = $(this).val(); //valor real dentro del input 
+        var idalumno = $(this).parents("#fila").find("#alumno").attr("data-id"); //id alumno
+        if(saved != newx){//si algun valor ( val ) se modifica
+            if(saved == '' & newx != ''){ 
+                /**
+                 * si el valor predefinido esta vacio, se interpreta la intencion 
+                 * de crear nueva nota
+                 */
 
-        var saved = $(this).attr("data-puntaje_actual");
-        var newx = $(this).val();
+                MyArray.push(/*Agregar objeto al array */
+                    {"idalumno" : idalumno, "idtarea" : idtarea, "puntos" : newx, "accion" : "crear"}
+                );
 
-        var alumno = $(this).parents("#fila").find("#nombrealumno").text();
-
-        if(saved != newx){
-            if(saved == '' & newx != ''){
-                console.log(alumno + ", crear nuevo valor");
                 $(this).attr("data-puntaje_actual", newx);
+                /**
+                 * El valor predefinido en atributo se igual al valor ( val ) del input 
+                 */
             }else if(newx == '' & saved != ""){
-                console.log(alumno + ", eliminar la nota");
+                /**
+                 * si el valor predefinido no esta vacio, sin embargo el nuevo valor ( val )
+                 * si se cuentra vacio, se interpreta la intencion 
+                 * de elimnar la nota
+                 */
+
+                MyArray.push(/*Agregar objeto al array */
+                    {"idalumno" : idalumno, "idtarea" : idtarea, "puntos" : newx, "accion" : "eliminar"}
+                );
+
                 $(this).attr("data-puntaje_actual", newx);
+                 /**
+                 * El valor predefinido en atributo se igual al valor ( val ) del input 
+                 */
+
             }else if(saved != "" & newx != saved){
-                console.log(alumno + ", actualizar nota");
+                /**
+                 * Si el valor predefinito en atributo no esta vacio y el nuevo 
+                 * valor (val) del input es diferente de este, se considera la intencion de 
+                 * actualizar la nota
+                 */
+
+                MyArray.push(/*Agregar objeto al array */
+                    {"idalumno" : idalumno, "idtarea" : idtarea, "puntos" : newx, "accion" : "actualizar"}
+                );
                 $(this).attr("data-puntaje_actual", newx);
+                  /**
+                 * El valor predefinido en atributo se igual al valor ( val ) del input 
+                 */
             }
+
         }
     });
+
+    var json = JSON.stringify(MyArray);
+    /**
+     * Convertir MyArray en un objeto json
+     * para luego enviarlo mediante ajax y ser procesado por el servidor 
+     */
+
+    $.ajax({
+        type: "POST",
+        data: {"json" : json},
+        url: "Controllers/Notes.php",
+        success: function (res) {
+            console.log(res);
+        }
+    });
+
  });

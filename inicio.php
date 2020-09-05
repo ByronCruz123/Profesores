@@ -81,4 +81,7 @@ if (!isset($_SESSION['user'])) {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
         <script src="resources/js/bootstrap-notify-3.1.3/bootstrap-notify.js"></script>
         <script src="resources/js/functions.js"></script>
+        <script>
+            cargarclases();
+        </script>
 </html>
