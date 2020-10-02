@@ -12,8 +12,9 @@ if (!isset($_SESSION['user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profesores | Inicio</title>
+    <link rel="icon" href="Resources/img/homework.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="Resources/css/bootstrap.css">
     <link rel="stylesheet" href="Resources/css/buscador.css">
     <link rel="stylesheet" href="Resources/css/styles.css">
 
@@ -22,6 +23,9 @@ if (!isset($_SESSION['user'])) {
 
 <body style="background-color: white;">
     <nav class="navbar navbar-white fixed-top bg-white border">
+        <div class="hamburger-menu">
+            <div class="bar"></div>
+        </div>
         <?php
         include 'Model/conexion.php';
         if (isset($_GET['clase']) && !empty($_GET['clase'])) {
@@ -62,22 +66,22 @@ if (!isset($_SESSION['user'])) {
                     </a>
 
                     <div>
-                            <div class="d-inline-block mr-2 btnlabel">
-                                <!-- <input type="checkbox" id="toggle" class="toggle-btn"> -->
-                                <label id="btn-search" for="search-tag">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" class="svg-icon iconlupa">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.3347 17.7381C14.6099 19.1517 12.404 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 12.3985 19.1556 14.5998 17.7478 16.3228L25.6796 24.2546C26.0702 24.6451 26.0702 25.2783 25.6796 25.6688C25.2891 26.0593 24.6559 26.0593 24.2654 25.6688L16.3347 17.7381ZM18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10Z"></path>
-                                    </svg>
-                                </label>
-                                <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 408" class="search-tag__come-back svg-icon s-mr-05"><path d="M408,178.5H96.9L239.7,35.7L204,0L0,204l204,204l35.7-35.7L96.9,229.5H408V178.5z"></path></svg> -->
-                                <input id="search-tag" placeholder="¿Qué buscaremos hoy?" type="search" class="search-tag__input s-bg-white z-normal" autocomplete="off">
-                            </div>
-
-                            <div class="d-inline-block pl-3 pl-lg-4 border-left">
-                                <a href="detalletarea.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>" class="btn btn-secondary">Instrucciones</a>
-                                <a href="calificaciones.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>" class="btn btn-secondary">Calificaciones</a>
-                            </div>
+                        <div class="d-inline-block mr-2 btnlabel">
+                            <!-- <input type="checkbox" id="toggle" class="toggle-btn"> -->
+                            <label id="btn-search" for="search-tag">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" class="svg-icon iconlupa">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16.3347 17.7381C14.6099 19.1517 12.404 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 12.3985 19.1556 14.5998 17.7478 16.3228L25.6796 24.2546C26.0702 24.6451 26.0702 25.2783 25.6796 25.6688C25.2891 26.0593 24.6559 26.0593 24.2654 25.6688L16.3347 17.7381ZM18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10Z"></path>
+                                </svg>
+                            </label>
+                            <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 408" class="search-tag__come-back svg-icon s-mr-05"><path d="M408,178.5H96.9L239.7,35.7L204,0L0,204l204,204l35.7-35.7L96.9,229.5H408V178.5z"></path></svg> -->
+                            <input id="search-tag" placeholder="¿Qué buscaremos hoy?" type="search" class="search-tag__input s-bg-white z-normal" autocomplete="off">
                         </div>
+
+                        <div class="d-inline-block pl-3 pl-lg-4 border-left">
+                            <a href="detalletarea.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>" class="btn btn-secondary">Instrucciones</a>
+                            <a href="calificaciones.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>" class="btn btn-secondary">Calificaciones</a>
+                        </div>
+                    </div>
     </nav>
 
     <main class="container tareas">
@@ -160,14 +164,22 @@ if (!isset($_SESSION['user'])) {
     </div>
 
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="resources/js/jquery.js"></script>
+<script src="resources/js/popper.min.js"></script>
+<script src="resources/js/bootstrap.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
-<script src="resources/js/bootstrap-notify-3.1.3/bootstrap-notify.js"></script>
+<script src="resources/js/bootstrap-notify.js"></script>
 <script src="resources/js/functions.js"></script>
 <script>
     cargartareas(<?php echo $_GET['clase'] ?>);
+ 
+    (function () {
+        $('.hamburger-menu').on('click', function() {
+            $('.bar').toggleClass('animate');
+
+        })
+    })();
+
 </script>
 
 </html>

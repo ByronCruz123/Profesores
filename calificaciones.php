@@ -12,58 +12,67 @@ if (!isset($_SESSION['user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profesores | Inicio</title>
+    <link rel="icon" href="Resources/img/homework.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Resources/css/bootstrap.css">
     <link rel="stylesheet" href="Resources/css/styles.css">
 
 
 </head>
 
 <body style="background-color: white;">
-    <nav class="navbar navbar-white fixed-top bg-white border">
+<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-white border-bottom">
+
         <?php
         include 'Model/conexion.php';
-        if (isset($_GET['clase']) && !empty($_GET['clase'])) {
+        if (isset($_GET['clase']) && !empty($_GET['clase'])) {//si existe un valor en la variable clase de la url
 
-            $idclase = mysqli_real_escape_string($con, $_GET['clase']);
+                $idclase = mysqli_real_escape_string($con, $_GET['clase']);  //escapar de caracteres extraños
+                $sql = mysqli_query($con, "SELECT * FROM clases WHERE id =  '$idclase'"); //consultar clase en BD para obtener titulo
 
-            $sql = mysqli_query($con, "SELECT * FROM clases WHERE id =  '$idclase'");
+                $clase = mysqli_fetch_assoc($sql);
 
-            $clase = mysqli_fetch_assoc($sql);
-
-            if (mysqli_num_rows($sql) > 0) {
-        ?>
-                <a class="navbar-brand seccion2" href="tareas.php?clase=<?php echo $clase['id'] ?>">
-                <?php
-            } else {
+                if (mysqli_num_rows($sql) > 0) {//si la consulta arroja un resulta la clase si existe y por tanto...
                 ?>
-                    <a class="navbar-brand seccion2" href="inicio.php">
-                    <?php
-                }
-            } else {
+                    <a class="navbar-brand seccion2" href="tareas.php?clase=<?php echo $clase['id'] ?>"><!-- Se usa su id en url para redireccionar a la lista de tareas de esa clase -->
+                <?php
+                } else {//si la clase no existe, solo existira un enlace a la pagina principal (clases)
                     ?>
-                    <a class="navbar-brand seccion2" href="inicio.php">
+                        <a class="navbar-brand seccion2" href="inicio.php">
                     <?php
-                }
-                    ?>
-                    <span> <?php echo isset($clase['nombre']) ? $clase['nombre'] : 'Esta tarea no existe :('; ?></span>
-                    <span>
-                        <?php
-                        if (isset($clase['seccion'])) {
-                            if (!empty($clase['seccion'])) {
-                                echo $clase['seccion'];
-                            } else {
-                                echo 1;
-                            }
+                    }
+            } else {//si la variable clase de la url no existe o esta vacia, el unico enlace mostrado sera a la pagina principal
+                ?>
+                <a class="navbar-brand seccion2" href="inicio.php">
+                <?php
+            }
+                ?>
+                <span> 
+                    <?php echo isset($clase['nombre']) ? $clase['nombre'] : 'Esta tarea no existe :('; //si la variable nombre contiene valor, se mostrara?>
+                </span>
+                <span>
+                    <?php
+                    if (isset($clase['seccion'])) {
+                        if (!empty($clase['seccion'])) {
+                            echo $clase['seccion'];
+                        } else {
+                            echo 1;
                         }
-                        ?>
-                    </span>
-                    </a>
+                    }
+                    ?>
+                </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
     </nav>
 
     <main class="container tareas">
-        <a href="detalletarea.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>" class="btn btn-secondary mb-3">Instrucciones</a>
-        <a href="calificaciones.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>" class="btn btn-secondary mb-3">Calificaciones</a>
+    <div class="botones d-block">
+            <a class="nav-link btn-blanco d-inline-block" href="detalletarea.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Instrucciones</a>
+            <a class="nav-link btn-blanco active d-inline-block" href="calificaciones.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Calificar tarea</a>
+        </div>
         <br>
         <span class="pt-4">
             <img src="resources/img/homework2.png" alt="icon" class="homework2_icon">
@@ -71,8 +80,7 @@ if (!isset($_SESSION['user'])) {
             include "Model/conexion.php";
             include "Includes/fecha.php";
             $idtarea = $_GET['tarea'];
-            $sql = mysqli_query($con, "SELECT * FROM tareas
-                                                   WHERE id = '$idtarea'");
+            $sql = mysqli_query($con,  "SELECT * FROM tareas WHERE id = '$idtarea'");
             $datostarea = mysqli_fetch_assoc($sql);
 
             ?>
@@ -96,29 +104,24 @@ if (!isset($_SESSION['user'])) {
                 </thead>
                 <tbody>
                     <?php
-                    $sql2 = mysqli_query($con, "SELECT * FROM alumnos");
+                    $sql2 = mysqli_query($con, "SELECT ac.id_alumno, us.nombre, us.apellido, nt.puntos 
+                                                FROM alumnosdeclase AS ac 
+                                                INNER JOIN usuario AS us ON ac.id_usuario = us.id 
+                                                INNER JOIN notas AS nt ON ac.id_alumno = nt.id_alumno
+                                                WHERE ac.id_clase = $idclase AND ac.acceso = true");
                     $contador = 1;
 
                     while ($alumno = mysqli_fetch_array($sql2)) { ?>
                         <tr id="fila">
                             <th scope="row"><?php echo $contador++; ?></th>
-                            <td id="alumno" data-id="<?php echo $alumno['id'] ?>"><?php echo $alumno['nombre'] ?></td>
+                            <td id="alumno" data-id="<?php echo $alumno['id_alumno'];?>"><?php echo $alumno['nombre'] . " ". $alumno["apellido"];?></td>
                             <td>
                                 <div class="form-group">
-                                    <?php 
-                                        $idalumno = $alumno['id'];
-                                        $sqlnota = mysqli_query($con,  "SELECT puntos 
-                                                                        FROM notas 
-                                                                        Where id_alumno = $idalumno and id_tarea = $idtarea");
-                                        $puntos = '';
-                                        if(mysqli_num_rows($sqlnota) > 0 ){     
-                                            $puntos = mysqli_fetch_assoc($sqlnota)['puntos'];
-                                        }
-                                    ?>
+
                                     <input  type="number" 
-                                            data-puntaje_actual="<?php echo $puntos;?>" 
+                                            data-puntaje_actual="<?php echo $alumno['puntos'];?>" 
                                             max="<?php echo $datostarea['puntos']; ?>" 
-                                            value="<?php echo $puntos; ?>"  
+                                            value="<?php echo $alumno['puntos']; ?>"  
                                             class="form-control input_puntos">
                                 </div>
                             </td>
@@ -167,11 +170,12 @@ if (!isset($_SESSION['user'])) {
             </div>
         </div>
     </div>
-</body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
-    <script src="resources/js/bootstrap-notify-3.1.3/bootstrap-notify.js"></script>
-    <script src="resources/js/functions.js"></script>
+    </body>
+<script src="resources/js/jquery.js"></script>
+<script src="resources/js/popper.min.js"></script>
+<script src="resources/js/bootstrap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+<script src="resources/js/bootstrap-notify.js"></script>
+<script src="resources/js/functions.js"></script>
+
 </html>

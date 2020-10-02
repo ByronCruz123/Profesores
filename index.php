@@ -1,55 +1,57 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>NoteClass - Ingresar</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="icon" href="Resources/img/homework.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
-    <link rel="stylesheet" type="text/css" href="resources/css/login.css">
     <link rel="stylesheet" type="text/css" href="resources/css/styles.css">
-  </head>
+    <link rel="stylesheet" type="text/css" href="resources/css/login.css">
+</head>
+
 <body>
-  <div class="modal-dialog text-center">
-    <div class="col-sm-9 main-section">
-      <div class="modal-content">
+    <div class="wrapper">
+        <div class="contenido">
+            <div class="container">
+                <h1 class="title_form">Bienvenido</h1>
 
-        <div class="col-12 user-img">
-          <img src="resources/img/face.png">
-        </div>
+                <form class="form" id="formulariologin">
+                    <input type="text" placeholder="Usuario" name="user" spellcheck="false" autocomplete="username">
+                    <input type="password" placeholder="Contraseña" name="pass">
+                    <button type="submit" id="login-button">Entrar</button>
+                </form>
+                <a href="register.php" class="new_account_link">No tienes una cuenta</a>
 
-        <div class="col-12 form-input">
-          <form id="formulariologin">
-            <div class="form-group">
-              <input type="text" class="form-control" name="user" placeholder="Usuario" required>
             </div>
-            <div class="form-group">
-              <input type="password" class="form-control" name="pass" placeholder="Contraseña" required>
-            </div>
-            <a id="login-button" class="btn btn-primary" type="button">
-                <span class="px-4">Entrar</span>
-            </a>
-            <input type="hidden" value="<?php  echo isset($_GET['cod']) ? $_GET['cod'] : ''; ?>" id="mensaje">
-          </form>
         </div>
-      </div>
+ 
+
+        <ul class="bg-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
     </div>
-  </div>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="resources/js/jquery.js"></script>
 <script src="resources/js/functions.js"></script>
-
 <script>
-  $(document).ready(function(){
-    var cod = $('#mensaje').val();
-
-    if(cod.length > 0 ){
-      if(cod == 1){
-        alert('El inicio de sesion es obligatorio');
-      }else if(cod == 2){
-        alert('');
-      }
-    }
-  });
+    $("#login-button").click(function (event) {
+        event.preventDefault();
+        $('.new_account_link').fadeOut(500);
+        $('form').fadeOut(500);
+        $('.wrapper').addClass('form-success');
+    });
 </script>
-</html>
 
+</html>

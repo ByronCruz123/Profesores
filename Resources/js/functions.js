@@ -22,24 +22,19 @@ $(document).ready(function () {
      */
     $("#login-button").click(function () {
         var boton = $(this);
-        var estilos1 = { 'background': '#007bff', 'border-color': '#007bff' };
-        var estilos2 = { 'background': '#166087', 'border-color': '#166087' };
 
         var datos = $('#formulariologin').serialize();
+        var action = "login";
 
         $.ajax({
             type: "POST",
             url: "Controllers/User.php",
-            data: datos,
-            beforeSend: function () {
-                boton.html(loader);
-                boton.css(estilos2);
-            },
+            data: datos + '&action=' + action,
+
             error: function () {
                 alert("No se pudo obtner informacion del servidor");
             },
             success: function (res) {
-                alert(res);
                 if (res == 'correcto') {
                     setTimeout(
                         function () {
@@ -56,10 +51,37 @@ $(document).ready(function () {
     })
 });
 
+$(document).ready(function () {
+    /**
+     * Metodo de verificacion de usario, (login)
+     */
+    $("#signup-button").click(function () {
+        var boton = $(this);
+
+        var datos = $('#formulariosignup').serialize();
+        var action = "signup";
+
+
+        $.ajax({
+            type: "POST",
+            url: "Controllers/User.php",
+            data: datos + '&action=' + action,
+
+            error: function () {
+                alert("No se pudo obtner informacion del servidor");
+            },
+            success: function (res) {
+                alert(res);
+            }
+        });
+    })
+});
+
 
 /**
  * Funciones Pagina Principal
  */
+
 /**
  * Unicamente cargara la lista de clases 
  */

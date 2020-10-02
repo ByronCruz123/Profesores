@@ -11,16 +11,17 @@ if (!isset($_SESSION['user'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profesores | Inicio</title>
+    <title>Profesores</title>
+    <link rel="icon" href="Resources/img/homework.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="Resources/css/bootstrap.css">
     <link rel="stylesheet" href="Resources/css/styles.css">
 
 
 </head>
 
 <body>
-    <nav class="navbar navbar-white fixed-top bg-white border">
+    <nav class="navbar navbar-white fixed-top bg-white border-bottom">
         <a class="navbar-brand titulo">
             <img src="resources/img/homework.png" alt="icon" class="homework_icon"> Profesores
             <span class="seccion"> Clases</span>
@@ -35,7 +36,7 @@ if (!isset($_SESSION['user'])) {
     <div>
         <ol class="clases_list">
 
-             <!-- Contenido Dinamico -->
+            <!-- Contenido Dinamico -->
 
         </ol>
     </div>
@@ -64,24 +65,25 @@ if (!isset($_SESSION['user'])) {
                             <input type="text" class="form-control" name="salon" placeholder="Salón">
                         </div>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Crear</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
                 </form>
             </div>
         </div>
     </div>
 
 </body>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
-        <script src="resources/js/bootstrap-notify-3.1.3/bootstrap-notify.js"></script>
-        <script src="resources/js/functions.js"></script>
-        <script>
-            cargarclases();
-        </script>
+<script src="resources/js/jquery.js"></script>
+<script src="resources/js/popper.min.js"></script>
+<script src="resources/js/bootstrap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+<script src="resources/js/bootstrap-notify.js"></script>
+<script src="resources/js/functions.js"></script>
+<script>
+    cargarclases();
+</script>
+
 </html>
