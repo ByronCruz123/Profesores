@@ -53,10 +53,10 @@ $(document).ready(function () {
             data: datos + '&action=' + action,
 
             error: function () {
-                alert("No se pudo obtner informacion del servidor");
+                alertify.error("No se pudo obtner informacion del servidor");
             },
             success: function (res) {
-                alert(res);
+                alertify.warning(res);
             }
         });
     })
@@ -368,7 +368,6 @@ function cargarnotificaciones() {
 $("#nuevatareaform").on('submit', function (evt) {
     evt.preventDefault();
     var formulario = $(this);
-    var idclase = formulario.find("input[name='idclase']").val();
     /**
      * El controlador tarea.php, puede ejecutar tres operaciones @Crear , @Editar y @Eliminar , segun se 
      * le indique
@@ -411,6 +410,40 @@ $("#nuevatareaform").on('submit', function (evt) {
     });
 });
 
+$(".eliminartarea").click(function(){
+    var tarea = $(this).attr("data-tarea");
+    var idclase = $("#claseid").val();
+
+    alertify.confirm('Eliminar tarea', 'Esto eliminará esta tarea incluyendo las notas registradas, ¿Estás de acuerdo?',
+            function () {
+                $.ajax({
+                    type: "POST",
+                    url: "Controllers/Activities.php",
+                    data: {tarea : tarea, accion : "eliminar"},
+                    success: function (res) {
+                        if(res == "eliminado"){
+                            window.location.href = "tareas.php?clase="+idclase+"";
+                        }else{
+                            alertify.error(res);
+                        }
+            
+                        //posibles respuestas del servidor 
+                        
+                    }
+                });
+            },
+            function () {
+
+            }).setting({
+                'labels': {
+                    ok: 'Sí, eliminar',
+                    cancel: 'Cancelar'
+                },
+                'reverseButtons': true,
+                'defaultFocusOff': true
+            });
+});
+
 /**
  * Funciones Guardar Notas del apartado calificaciones 
  */
@@ -422,7 +455,7 @@ $("#guardarnotas").click(function () {
     $('.input_puntos').each(function () {//recorrer cada input
         var saved = $(this).attr("data-puntaje_actual");//valor predefinido (guardado en la db)
         var newx = $(this).val(); //valor real dentro del input 
-        var idalumno = $(this).parents("#fila").find("#alumno").attr("data-id"); //id alumno
+        var idalumno = $(this).parents("#fila").attr("data-id"); //id alumno
         if (saved != newx) {//si algun valor ( val ) se modifica
             if (saved == '' & newx != '') {
                 /**

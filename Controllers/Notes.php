@@ -2,6 +2,8 @@
 include_once "../Model/conexion.php";
 $notas = json_decode($_POST["json"]);
 
+
+
 foreach ($notas as $notas) {
     $idalumno = $notas->{"idalumno"};
     $idtarea = $notas->{"idtarea"};
@@ -18,7 +20,7 @@ foreach ($notas as $notas) {
     } elseif ($notas->{"accion"} == "actualizar") {
         $sql = mysqli_query($con, "UPDATE notas 
                                    SET puntos = '$puntos'
-                                   WHERE idalumno = '$idalumno' and idtarea = '$idtarea'");
+                                   WHERE id_alumno = '$idalumno' and id_tarea = '$idtarea'");
         if ($sql) {
             echo "nota actualizada";
         } else {

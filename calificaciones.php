@@ -163,7 +163,7 @@ if (!isset($_SESSION['user'])) {
         <h4 class="titulotarea mt-3"><?php echo $datostarea['titulo']; ?></h4>
         <span class="d-flex justify-content-between mt-3 mb-2">
             <?php echo $datostarea['puntos']; ?> puntos
-            <button id="guardarnotas" data-idtarea="<?php echo $_GET['tarea'] ?>" class="btn btn-success" disabled>Actualizar notas</button>
+            <button id="guardarnotas" data-idtarea="<?php echo $_GET['tarea'] ?>" class="btn btn-success">Actualizar notas</button>
         </span>
 
         <div class="tarea mt-1">
@@ -172,26 +172,31 @@ if (!isset($_SESSION['user'])) {
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Alumno</th>
-                        <th scope="col">Puntos</th>
+                        <th scope="col" style="width: 6em;">Puntos</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $sql2 = mysqli_query($con, "SELECT ac.id_alumno, us.nombre, us.apellido, nt.puntos 
-                                                FROM alumnosdeclase AS ac 
-                                                INNER JOIN usuario AS us ON ac.id_usuario = us.id 
-                                                INNER JOIN notas AS nt ON ac.id_alumno = nt.id_alumno
-                                                WHERE ac.id_clase = $idclase AND ac.acceso = true");
+                    $sql2 = mysqli_query($con, "SELECT ac.id_alumno as id, us.nombre as nombre, us.apellido as apellido 
+                                                FROM alumnosdeclase as ac
+                                                INNER JOIN usuario as us ON us.id = ac.id_usuario
+                                                WHERE ac.id_clase = $idclase");
                     $contador = 1;
 
-                    while ($alumno = mysqli_fetch_array($sql2)) { ?>
-                        <tr id="fila">
+                    while ($alumno = mysqli_fetch_array($sql2)) {   $idalumno = $alumno['id']; ?>
+                        <tr id="fila" data-id="<?php echo $idalumno;?>">
                             <th scope="row"><?php echo $contador++; ?></th>
-                            <td id="alumno" data-id="<?php echo $alumno['id_alumno']; ?>"><?php echo $alumno['nombre'] . " " . $alumno["apellido"]; ?></td>
+                            <td class="text-capitalize"><?php echo $alumno['nombre'] . " " . $alumno['apellido'] ?></td>
                             <td>
                                 <div class="form-group">
-
-                                    <input type="number" data-puntaje_actual="<?php echo $alumno['puntos']; ?>" max="<?php echo $datostarea['puntos']; ?>" value="<?php echo $alumno['puntos']; ?>" class="form-control input_puntos">
+                                    <?php 
+                                        $sqlnota = mysqli_query($con, "SELECT puntos FROM notas Where id_alumno = $idalumno and id_tarea = $idtarea");
+                                        $puntos = '';
+                                        if(mysqli_num_rows($sqlnota) > 0 ){     
+                                            $puntos = mysqli_fetch_assoc($sqlnota)['puntos'];
+                                        }
+                                    ?>
+                                    <input  type="number" data-puntaje_actual="<?php echo $puntos;?>" max="<?php echo $datostarea['puntos']; ?>" value="<?php echo $puntos; ?>"  class="form-control input_puntos">
                                 </div>
                             </td>
                         </tr>

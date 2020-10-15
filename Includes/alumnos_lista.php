@@ -12,7 +12,7 @@ if (isset($_REQUEST['clase']) && !empty($_REQUEST['clase'])) {
     while ($alumno = mysqli_fetch_array($sql2)) { ?>
         <tr id="fila">
             <th scope="row"><?php echo $contador++; ?></th>
-            <td id="alumno"><?php echo $alumno['nombre'] . " " . $alumno["apellido"]; ?></td>
+            <td class="text-capitalize"><?php echo $alumno['nombre'] . " " . $alumno["apellido"]; ?></td>
             <td>
                 <button class="btn btn-danger btn_eliminar_alumno" role="button" data-id="<?php echo $alumno['id_alumno']; ?>" data-para="<?php echo $alumno['id_usuario']; ?>">
                     Eliminar

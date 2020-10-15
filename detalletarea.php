@@ -46,6 +46,8 @@ if (!isset($_SESSION['user'])) {
 
 </head>
 
+
+
 <body style="background-color: white;">
     <header>
         <!-- Fixed navbar -->
@@ -161,43 +163,100 @@ if (!isset($_SESSION['user'])) {
     </header>
 
 
+    <!-- ID CLASE -->
+<input type="hidden" id="claseid" value="<?php echo $idclase; ?>">
 
-    <main class="container tareas">
-        <div class="botones d-block">
-            <a class="nav-link btn-blanco-desing active d-inline-block" href="detalletarea.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Instrucciones</a>
-            <?php
-            if ($permiso == 1) {
-            ?>
-                <a class="nav-link btn-blanco-desing d-inline-block" href="calificaciones.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Calificar tarea</a>
-            <?php } ?>
-        </div>
 
-        <br>
-        <span class="pt-4">
-            <img src="resources/img/homework2.png" alt="icon" class="homework2_icon">
-            <?php
-            include "Model/conexion.php";
-            include "Includes/fecha.php";
-            $idtarea = $_GET['tarea'];
-            $sql = mysqli_query($con, "SELECT * FROM tareas
+
+    <?php
+    if ($permiso == 1 || $permiso == 2) {
+    ?>
+        <main class="container tareas">
+            <div class="botones d-block">
+                <a class="nav-link btn-blanco-desing active d-inline-block" href="detalletarea.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Instrucciones</a>
+                <?php
+                if ($permiso == 1) {
+                ?>
+                    <a class="nav-link btn-blanco-desing d-inline-block" href="calificaciones.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Calificar tarea</a>
+                <?php } ?>
+            </div>
+
+            <br>
+            <span class="pt-4">
+                <img src="resources/img/homework2.png" alt="icon" class="homework2_icon">
+                <?php
+                include "Model/conexion.php";
+                include "Includes/fecha.php";
+                $idtarea = $_GET['tarea'];
+                $sql = mysqli_query($con, "SELECT * FROM tareas
                                                    WHERE id = '$idtarea'");
-            $datostarea = mysqli_fetch_assoc($sql);
+                $datostarea = mysqli_fetch_assoc($sql);
 
-            ?>
+                ?>
 
-            Fecha de entrega: <?php echo fecha($datostarea['fecha_entrega']) . substr($datostarea['fecha_entrega'], 11, 5) ?>
-        </span>
-        <br>
-        <h4 class="titulotarea mt-3"><?php echo $datostarea['titulo']; ?></h4>
-        <span class="mt-3">
-            <span class="nombreprofesor"><?php echo $_SESSION['nombre'] ?></span>
-            <span class="fecha_creado"><?php echo fecha($datostarea['fecha_creacion']) ?></span>
-        </span>
-        <hr>
-        <div class="tarea">
-            <span class="instrucciones"><?php echo $datostarea['instrucciones']; ?></span>
-        </div>
-    </main>
+                Fecha de entrega: <?php echo fecha($datostarea['fecha_entrega']) . substr($datostarea['fecha_entrega'], 11, 5) ?>
+            </span>
+            <br>
+            <h4 class="titulotarea mt-3"><?php echo $datostarea['titulo']; ?></h4>
+            <span class="d-flex justify-content-between mt-3">
+                <span>
+                    <!-- nombre profesor y fecha de creacion -->
+                    <span class="nombreprofesor">
+                        <?php
+                        $nombreprofequery  = mysqli_query($con, "SELECT CONCAT(us.nombre, ' ', us.apellido)  as nombre
+                                                        FROM tareas as tr 
+                                                        INNER JOIN clases as cl ON cl.id = tr.id_clase
+                                                        INNER JOIN usuario as us ON us.id = cl.id_profesor
+                                                        WHERE tr.id = '$idtarea'");
+
+                        echo $nombreprofe = mysqli_fetch_assoc($nombreprofequery)['nombre'];
+                        ?>
+                    </span>
+                    <span class="fecha_creado"><?php echo fecha($datostarea['fecha_creacion']) ?></span>
+                </span> <!-- fin nombre profesor y fecha de creacion -->
+
+                <?php
+                if ($permiso == 2) {
+                    $existenota = mysqli_query($con,   "SELECT nt.puntos as puntos FROM notas as nt 
+                                                        INNER JOIN alumnosdeclase as ac ON ac.id_alumno = nt.id_alumno
+                                                        WHERE ac.id_usuario = '$idusuario'");
+                    if (mysqli_num_rows($existenota) > 0) {
+                ?>
+                        <span class="text-success">
+                            Calificada:
+                                <?php $puntos = mysqli_fetch_assoc($existenota)['puntos']; ?>
+                            <span class="puntos <?php echo $puntos > 59 ? "" : "text-danger"; ?>">
+                                <?php echo $puntos . '/' . $datostarea['puntos'] . ' pts';?> 
+                            </span>
+                        </span>
+                <?php
+                    }else{
+                        ?>
+                            <span class="text-danger">
+                                No calificada aún
+                            </span>
+                        <?php
+                    }
+                }
+                ?>
+
+
+
+            </span>
+            <hr>
+            <div class="tarea">
+                <span class="instrucciones"><?php echo $datostarea['instrucciones']; ?></span>
+                <?php
+                if ($permiso == 1) {?>
+                    <div class="d-flex justify-content-end mt-2 text-danger ">
+                    <button type="button" data-tarea="<?php echo isset($idtarea) ? $idtarea : "";?>" class="btn btn-danger btn-sm eliminartarea">Eliminar tarea</button>
+
+                    </div>
+                <?php }?>
+            </div>
+        </main>
+
+    <?php } ?>
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="navbar">
