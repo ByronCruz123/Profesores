@@ -1,7 +1,9 @@
 <?php
-session_start();
+
+echo "Aun en beta";
+/* session_start();
 if (!isset($_SESSION['user'])) {
-    header('Location: index.php?cod=1');
+    header('Location: index.php');
     exit();
 }
 ?>
@@ -10,11 +12,12 @@ if (!isset($_SESSION['user'])) {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Clases</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitudes</title>
     <link rel="icon" href="Resources/img/homework.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="Resources/css/bootstrap.css">
+    <link rel="stylesheet" href="Resources/css/buscador.css">
     <link rel="stylesheet" href="Resources/css/styles.css">
     <link rel="stylesheet" href="Resources/css/navbar.css">
     <link rel="stylesheet" href="Resources/css/alertify.css">
@@ -22,16 +25,15 @@ if (!isset($_SESSION['user'])) {
 
     <!-- SIDEBAR ICONS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-
 </head>
 
-<body>
+<body style="background-color: white;">
     <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-white border-bottom">
         <div class="navlogo">
             <img src="resources/img/homework.png" alt="icon" class="homework_icon">
             <a class="navbar-brand titulo">
                 <span>Profesores</span>
-                <span class="seccion"> Clases</span>
+                <span class="seccion"> Solicitudes</span>
             </a>
         </div>
 
@@ -44,6 +46,8 @@ if (!isset($_SESSION['user'])) {
                     </svg>
                     Clases
                 </a>
+            </li>
+            <li class="nav-item">
             </li>
             <li class="nav-item">
                 <a class="nav-link btn-blanco-desing" href="solicitudes.php">
@@ -89,37 +93,30 @@ if (!isset($_SESSION['user'])) {
             </li>
         </ul>
 
-        <div class="btnextrayburger">
-            <a class="btn btn_new_class btn-class-modal" type="button" data-toggle="modal" data-target="#formclasemodal" data-accion="agregar">
-                <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-plus icono" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                </svg>
-            </a>
-            <button class="navbar-toggler btn-menu" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
+        <div class="vacio ml-lg-5 mr-lg-5 pr-lg-2"></div>
+        <button class="navbar-toggler btn-menu" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
     </nav>
 
-    <div>
-        <ol class="clases_list">
 
+
+    <!--CONTENIDO-->
+    <main class="container tareas">
+
+        <div class="tarea">
             <!-- Contenido Dinamico -->
 
-        </ol>
-    </div>
 
 
-    <div class="modal fade px-2" id="formclasemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modalformclase">
 
-                 <!-- Contenido Dinamico -->
 
-            </div>
+
         </div>
-    </div>
 
+    </main>
+
+ 
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="navbar">
@@ -159,6 +156,7 @@ if (!isset($_SESSION['user'])) {
     </aside>
 
 </body>
+
 <script src="resources/js/jquery.js"></script>
 <script src="resources/js/popper.min.js"></script>
 <script src="resources/js/bootstrap.js"></script>
@@ -166,7 +164,10 @@ if (!isset($_SESSION['user'])) {
 <script src="resources/js/alertify.js"></script>
 <script src="resources/js/functions.js"></script>
 <script>
-    cargarclases();
 </script>
 
 </html>
+
+<?php
+ */
+?>

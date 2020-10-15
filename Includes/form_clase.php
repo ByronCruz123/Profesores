@@ -49,23 +49,25 @@ if ($_REQUEST['accion'] == "agregar") {
 
 ?>
 
+
+
 <form id="formularioclase">
     <div class="modal-body">
         <h6 class="modal-title" id="exampleModalLabel"> <?php echo $titulomodal; ?> </h6>
         <div class="form-group pt-3">
-            <input type="text" class="form-control" value="<?php echo $nombreclase; ?>" name="nombre" placeholder="Nombre de clase (obligatorio)" required>
+            <input type="text" class="form-control" value="<?php echo $nombreclase; ?>" name="nombre" placeholder="Nombre de clase (obligatorio)" required autocomplete="off">
         </div>
 
         <div class="form-group">
-            <input type="text" class="form-control" value="<?php echo $seccion; ?>" name="seccion" placeholder="Sección">
+            <input type="text" class="form-control" value="<?php echo $seccion; ?>" name="seccion" placeholder="Sección" autocomplete="off">
         </div>
 
         <div class="form-group">
-            <input type="text" class="form-control" value="<?php echo $materia; ?>" name="materia" placeholder="Materia">
+            <input type="text" class="form-control" value="<?php echo $materia; ?>" name="materia" placeholder="Materia" autocomplete="off">
         </div>
 
         <div class="form-group">
-            <input type="text" class="form-control" value="<?php echo $salon; ?>" name="salon" placeholder="Salón">
+            <input type="text" class="form-control" value="<?php echo $salon; ?>" name="salon" placeholder="Salón" autocomplete="off">
         </div>
     </div>
     <div class="modal-footer">

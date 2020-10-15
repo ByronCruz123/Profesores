@@ -11,12 +11,18 @@ if (!isset($_SESSION['user'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profesores | Inicio</title>
+    <title>Calificaciones</title>
     <link rel="icon" href="Resources/img/homework.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="Resources/css/bootstrap.css">
     <link rel="stylesheet" href="Resources/css/styles.css">
+    <link rel="stylesheet" href="Resources/css/navbar.css">
+    <link rel="stylesheet" href="Resources/css/alertify.css">
+    <link rel="stylesheet" href="Resources/css/default.css">
+
+    <!-- SIDEBAR ICONS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
 
 </head>
@@ -50,7 +56,7 @@ if (!isset($_SESSION['user'])) {
                 }
                     ?>
                     <span>
-                        <?php echo isset($clase['nombre']) ? $clase['nombre'] : 'Esta tarea no existe :('; //si la variable nombre contiene valor, se mostrara
+                        <?php echo isset($clase['nombre']) ? $clase['nombre'] : 'Esta clase no existe :('; //si la variable nombre contiene valor, se mostrara
                         ?>
                     </span>
                     <span>
@@ -78,7 +84,7 @@ if (!isset($_SESSION['user'])) {
                         </li>
                         <li class="nav-item">
 
-                            <a class="nav-link btn-blanco-desing" href="alumnos.php">
+                            <a class="nav-link btn-blanco-desing" href="alumnos.php?clase=<?php echo $idclase ?>">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-people-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
                                 </svg>
@@ -128,16 +134,16 @@ if (!isset($_SESSION['user'])) {
                             </div>
                         </li>
                     </ul>
-                    <div class="vacio"></div>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                    <div class="vacio pl-lg-3 pr-lg-4"></div>
+                    <button class="navbar-toggler btn-menu" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
     </nav>
 
     <main class="container tareas">
         <div class="botones d-block">
-            <a class="nav-link btn-blanco d-inline-block" href="detalletarea.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Instrucciones</a>
-            <a class="nav-link btn-blanco active d-inline-block" href="calificaciones.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Calificar tarea</a>
+            <a class="nav-link btn  btn-blanco-desing d-inline-block px-4" href="detalletarea.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Instrucciones</a>
+            <a class="nav-link btn  btn-blanco-desing active d-inline-block px-4" href="calificaciones.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Calificar tarea</a>
         </div>
         <br>
         <span class="pt-4">
@@ -155,12 +161,13 @@ if (!isset($_SESSION['user'])) {
         </span>
         <br>
         <h4 class="titulotarea mt-3"><?php echo $datostarea['titulo']; ?></h4>
-        <span class="pt-4">
+        <span class="d-flex justify-content-between mt-3 mb-2">
             <?php echo $datostarea['puntos']; ?> puntos
-            <button id="guardarnotas" data-idtarea="<?php echo $_GET['tarea'] ?>">Actualizar notas</button>
+            <button id="guardarnotas" data-idtarea="<?php echo $_GET['tarea'] ?>" class="btn btn-success" disabled>Actualizar notas</button>
         </span>
-        <div class="tarea mt-2">
-            <table class="table">
+
+        <div class="tarea mt-1">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -195,49 +202,54 @@ if (!isset($_SESSION['user'])) {
                 </tbody>
             </table>
         </div>
-
     </main>
 
 
-
-    <div class="modal fade px-2" id="crearclase" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h6 class="modal-title" id="exampleModalLabel">Crear una clase</h6>
-                    <form id="nuevaclaseform" class="pt-3">
-                        <input type="hidden" name="accion" value="crear">
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="nombre" placeholder="Nombre de la clase (obligatorio)" required>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="seccion" placeholder="Sección">
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="materia" placeholder="Materia">
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="salon" placeholder="Salón">
-                        </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Crear</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="navbar">
+        <header>
+            Profesores
+        </header>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="inicio.php"><i class="ion-ios-home-outline"></i> <span>Clases</span></a>
+                </li>
+                 <li>
+                    <a href="alumnos.php?clase=<?php echo $idclase ?>"><i class="ion-android-people"></i> <span>Alumnos</span></a>
+                </li>
+                <li>
+                    <a href="solicitudes.php"><i class="ion-android-person-add"></i> <span>Solicitudes</span></a>
+                </li>
+                <li>
+                    <a href="notificaciones.php"><i class="ion-ios-bell-outline"></i> <span class="">Notificaciones</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="ion-android-person"></i> <span class="">Cuenta</span></a>
+                    <ul class="nav-flyout">
+                        <li>
+                            <a href="configurarcuenta.php"><i class="ion-gear-a"></i>Configurar cuenta</a>
+                        </li>
+                        <li>
+                            <a href="salir.php"><i class="ion-ios-close-outline"></i>Cerrar sesion</a>
+                        </li>
+                        <li>
+                            <a href="register.php"><i class="ion-ios-plus-outline"></i> Nueva Cuenta</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="salir.php"><i class="ion-ios-unlocked-outline"></i> <span class="">Salir</span></a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
 </body>
 <script src="resources/js/jquery.js"></script>
 <script src="resources/js/popper.min.js"></script>
 <script src="resources/js/bootstrap.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
-<script src="resources/js/bootstrap-notify.js"></script>
+<script src="resources/js/alertify.js"></script>
 <script src="resources/js/functions.js"></script>
 
 </html>

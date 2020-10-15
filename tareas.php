@@ -3,7 +3,26 @@ session_start();
 if (!isset($_SESSION['user'])) {
     header('Location: index.php');
     exit();
+} else {
+    include 'Model/conexion.php';
+    $idclase = mysqli_real_escape_string($con, $_REQUEST['clase']);
+    $idusuario = $_SESSION['iduser'];
+
+    $permiso = 0;
+
+    $validacion1 = mysqli_query($con, "SELECT id FROM clases WHERE id = '$idclase' and id_profesor = '$idusuario'");
+    if (mysqli_num_rows($validacion1) > 0) {
+        $permiso = 1;
+    } else {
+        $validacion2 = mysqli_query($con, "SELECT id_clase FROM alumnosdeclase WHERE id_clase = '$idclase' and id_usuario = '$idusuario'");
+        if (mysqli_num_rows($validacion2) > 0) {
+            $permiso = 2;
+        } else {
+            $permiso = 0;
+        }
+    }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -11,13 +30,15 @@ if (!isset($_SESSION['user'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profesores | Inicio</title>
+    <title>Tareas</title>
     <link rel="icon" href="Resources/img/homework.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="Resources/css/bootstrap.css">
     <link rel="stylesheet" href="Resources/css/buscador.css">
     <link rel="stylesheet" href="Resources/css/styles.css">
     <link rel="stylesheet" href="Resources/css/navbar.css">
+    <link rel="stylesheet" href="Resources/css/alertify.css">
+    <link rel="stylesheet" href="Resources/css/default.css">
 
     <!-- SIDEBAR ICONS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
@@ -26,8 +47,8 @@ if (!isset($_SESSION['user'])) {
 <body style="background-color: white;">
     <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-white border-bottom">
         <?php
-        include 'Model/conexion.php';
-        if (isset($_GET['clase']) && !empty($_GET['clase'])) {
+
+        if (isset($_GET['clase']) && !empty($_GET['clase']) && $permiso != 0) {
 
             $idclase = mysqli_real_escape_string($con, $_GET['clase']);
 
@@ -39,14 +60,12 @@ if (!isset($_SESSION['user'])) {
                 <a class="navbar-brand seccion2" href="tareas.php?clase=<?php echo $clase['id'] ?>">
                 <?php
             } else { ?>
-                    <a class="navbar-brand seccion2" href="inicio.php">
-                    <?php
-                }
-            } else { ?>
-                    <a class="navbar-brand seccion2" href="inicio.php">
-                    <?php
-                } ?>
-                    <span> <?php echo isset($clase['nombre']) ? $clase['nombre'] : 'Esta tarea no existe :('; ?></span>
+                    <a class="navbar-brand seccion2" href="inicio.php"><?php
+                                                                    }
+                                                                } else { ?>
+                    <a class="navbar-brand seccion2" href="inicio.php"> <?php
+                                                                    } ?>
+                    <span> <?php echo isset($clase['nombre']) ? $clase['nombre'] : 'Esta clase no existe :('; ?></span>
                     <span> <?php
                             if (isset($clase['seccion'])) {
                                 if (!empty($clase['seccion'])) {
@@ -68,15 +87,20 @@ if (!isset($_SESSION['user'])) {
                                 Clases
                             </a>
                         </li>
-                        <li class="nav-item">
 
-                            <a class="nav-link btn-blanco-desing" href="alumnos.php">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-people-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
-                                </svg>
-                                Alumnos
-                            </a>
-                        </li>
+                        <?php
+                        if ($permiso == 1) {
+                        ?>
+                            <li class="nav-item">
+
+                                <a class="nav-link btn-blanco-desing" href="alumnos.php?clase=<?php echo $idclase ?>">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-people-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+                                    </svg>
+                                    Alumnos
+                                </a>
+                            </li>
+                        <?php } ?>
                         <li class="nav-item">
                             <a class="nav-link btn-blanco-desing" href="solicitudes.php">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-plus-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -139,11 +163,19 @@ if (!isset($_SESSION['user'])) {
     </nav>
 
 
-
     <!--CONTENIDO-->
     <main class="container tareas">
-        <a href="" class="btn btn-info mb-3" data-toggle="modal" data-target="#creartareamodal">Nueva tarea</a>
-
+        <?php
+        if ($permiso == 1) {
+        ?>
+            <a href="" class="btn btn-info mb-3" data-toggle="modal" data-target="#creartareamodal">Nueva tarea</a>
+        <?php
+        }else{
+        ?>
+        <div class="pt-4"></div>
+        <?php
+        }
+        ?>
         <div class="tarea">
             <!-- Contenido Dinamico -->
 
@@ -157,7 +189,6 @@ if (!isset($_SESSION['user'])) {
     </main>
 
     <!-- MODAL 1 -->
-
     <div class="modal fade px-2" id="creartareamodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -192,44 +223,6 @@ if (!isset($_SESSION['user'])) {
         </div>
     </div>
 
-    <!-- MODAL 2-->
-
-    <div class="modal fade px-2" id="crearclase" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h6 class="modal-title" id="exampleModalLabel">Crear una clase</h6>
-                    <form id="nuevaclaseform" class="pt-3">
-                        <input type="hidden" name="accion" value="crear">
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="nombre" placeholder="Nombre de la clase (obligatorio)" required>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="seccion" placeholder="Sección">
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="materia" placeholder="Materia">
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="salon" placeholder="Salón">
-                        </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Crear</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-
-
     <!-- SIDEBAR -->
     <aside class="sidebar" id="navbar">
         <header>
@@ -240,6 +233,12 @@ if (!isset($_SESSION['user'])) {
                 <li>
                     <a href="inicio.php"><i class="ion-ios-home-outline"></i> <span>Clases</span></a>
                 </li>
+                <?php
+                if ($permiso == 1) { ?>
+                    <li>
+                        <a href="alumnos.php?clase=<?php echo $idclase ?>"><i class="ion-android-people"></i> <span>Alumnos</span></a>
+                    </li>
+                <?php } ?>
                 <li>
                     <a href="solicitudes.php"><i class="ion-android-person-add"></i> <span>Solicitudes</span></a>
                 </li>
@@ -273,17 +272,10 @@ if (!isset($_SESSION['user'])) {
 <script src="resources/js/popper.min.js"></script>
 <script src="resources/js/bootstrap.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
-<script src="resources/js/bootstrap-notify.js"></script>
+<script src="resources/js/alertify.js"></script>
 <script src="resources/js/functions.js"></script>
 <script>
     cargartareas(<?php echo $_GET['clase'] ?>);
-
-    (function() {
-        $('.hamburger-menu').on('click', function() {
-            $('.bar').toggleClass('animate');
-
-        })
-    })();
 </script>
 
 </html>

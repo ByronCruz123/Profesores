@@ -3,7 +3,7 @@ session_start();
 if (!isset($_SESSION['user'])) {
     header('Location: index.php');
     exit();
-} else {
+}else {
     include 'Model/conexion.php';
     $idclase = mysqli_real_escape_string($con, $_REQUEST['clase']);
     $idusuario = $_SESSION['iduser'];
@@ -16,9 +16,9 @@ if (!isset($_SESSION['user'])) {
     } else {
         $validacion2 = mysqli_query($con, "SELECT id_clase FROM alumnosdeclase WHERE id_clase = '$idclase' and id_usuario = '$idusuario'");
         if (mysqli_num_rows($validacion2) > 0) {
-            $permiso = 2;
+            header('Location: inicio.php');
         } else {
-            $permiso = 0;
+            header('Location: inicio.php');
         }
     }
 }
@@ -52,7 +52,8 @@ if (!isset($_SESSION['user'])) {
         <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-white border-bottom">
             <?php
             include 'Model/conexion.php';
-            if (isset($_GET['clase']) && !empty($_GET['clase']) && $permiso != 0) {
+            $nombreclase = '';
+            if (isset($_GET['clase']) && !empty($_GET['clase'])) {
 
                 $idclase = mysqli_real_escape_string($con, $_GET['clase']);
 
@@ -61,6 +62,7 @@ if (!isset($_SESSION['user'])) {
                 $clase = mysqli_fetch_assoc($sql);
 
                 if (mysqli_num_rows($sql) > 0) {
+                    $nombreclase = $clase['nombre'];
             ?>
                     <a class="navbar-brand seccion2" href="tareas.php?clase=<?php echo $clase['id'] ?>">
                     <?php
@@ -98,18 +100,15 @@ if (!isset($_SESSION['user'])) {
                                     Clases
                                 </a>
                             </li>
-                            <?php
-                            if ($permiso == 1) {
-                            ?>
-                                <li class="nav-item">
-                                    <a class="nav-link btn-blanco-desing" href="alumnos.php?clase=<?php echo $idclase ?>">
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-people-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
-                                        </svg>
-                                        Alumnos
-                                    </a>
-                                </li>
-                            <?php } ?>
+                            <li class="nav-item">
+
+                                <a class="nav-link btn-blanco-desing" href="alumnos.php?clase=<?php echo $idclase ?>">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-people-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+                                    </svg>
+                                    Alumnos
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link btn-blanco-desing" href="solicitudes.php">
                                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-plus-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -158,46 +157,75 @@ if (!isset($_SESSION['user'])) {
                             <span class="navbar-toggler-icon"></span>
                         </button>
         </nav>
+
     </header>
+
+
+    <input class="idclase" type="hidden" value="<?php echo $idclase ?>">
 
 
 
     <main class="container tareas">
         <div class="botones d-block">
-            <a class="nav-link btn-blanco-desing active d-inline-block" href="detalletarea.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Instrucciones</a>
-            <?php
-            if ($permiso == 1) {
-            ?>
-                <a class="nav-link btn-blanco-desing d-inline-block" href="calificaciones.php?tarea=<?php echo $_GET['tarea'] ?>&clase=<?php echo $_GET['clase'] ?>">Calificar tarea</a>
-            <?php } ?>
+            <a class="nav-link btn-blanco-desing active d-inline-block" href="alumnos.php?clase=<?php echo $idclase ?>">Lista de alumnos</a>
+            <a class="nav-link btn-blanco-desing d-inline-block btn_agregaralumno">Agregar</a>
         </div>
 
         <br>
-        <span class="pt-4">
-            <img src="resources/img/homework2.png" alt="icon" class="homework2_icon">
-            <?php
-            include "Model/conexion.php";
-            include "Includes/fecha.php";
-            $idtarea = $_GET['tarea'];
-            $sql = mysqli_query($con, "SELECT * FROM tareas
-                                                   WHERE id = '$idtarea'");
-            $datostarea = mysqli_fetch_assoc($sql);
+        <div >
+            <h1 class="titulotarea grayclaro" >Alumnos de <?php echo $nombreclase;?></h1>
+            <table class="table table-bordered mt-4">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody class="listaalumnos">
 
-            ?>
 
-            Fecha de entrega: <?php echo fecha($datostarea['fecha_entrega']) . substr($datostarea['fecha_entrega'], 11, 5) ?>
-        </span>
-        <br>
-        <h4 class="titulotarea mt-3"><?php echo $datostarea['titulo']; ?></h4>
-        <span class="mt-3">
-            <span class="nombreprofesor"><?php echo $_SESSION['nombre'] ?></span>
-            <span class="fecha_creado"><?php echo fecha($datostarea['fecha_creacion']) ?></span>
-        </span>
-        <hr>
-        <div class="tarea">
-            <span class="instrucciones"><?php echo $datostarea['instrucciones']; ?></span>
+                </tbody>
+            </table>
+
         </div>
+
     </main>
+
+
+
+    <div class="modal fade px-2" id="crearclase" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h6 class="modal-title" id="exampleModalLabel">Crear una clase</h6>
+                    <form id="nuevaclaseform" class="pt-3">
+                        <input type="hidden" name="accion" value="crear">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="nombre" placeholder="Nombre de la clase (obligatorio)" required>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="seccion" placeholder="Sección">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="materia" placeholder="Materia">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="salon" placeholder="Salón">
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="navbar">
@@ -209,13 +237,9 @@ if (!isset($_SESSION['user'])) {
                 <li>
                     <a href="inicio.php"><i class="ion-ios-home-outline"></i> <span>Clases</span></a>
                 </li>
-                <?php
-                if ($permiso == 1) {
-                ?>
-                    <li>
-                        <a href="alumnos.php?clase=<?php echo $idclase ?>"><i class="ion-android-people"></i> <span>Alumnos</span></a>
-                    </li>
-                <?php } ?>
+                <li>
+                    <a href="alumnos.php?clase=<?php echo $idclase ?>"><i class="ion-android-people"></i> <span>Alumnos</span></a>
+                </li>
                 <li>
                     <a href="solicitudes.php"><i class="ion-android-person-add"></i> <span>Solicitudes</span></a>
                 </li>
@@ -243,6 +267,7 @@ if (!isset($_SESSION['user'])) {
         </nav>
     </aside>
 
+
 </body>
 <script src="resources/js/jquery.js"></script>
 <script src="resources/js/popper.min.js"></script>
@@ -250,5 +275,8 @@ if (!isset($_SESSION['user'])) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
 <script src="resources/js/alertify.js"></script>
 <script src="resources/js/functions.js"></script>
+<script>
+    cargaralumnos();
+</script>
 
 </html>
