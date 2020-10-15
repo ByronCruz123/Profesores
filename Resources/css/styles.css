@@ -384,6 +384,17 @@ main.container{
     font-weight: 300;
 }
 
+.miinformacion h1{
+  font-size: 1rem !important;
+    line-height: 1.3em;
+    font-family: 'roboto';
+    letter-spacing: 1.5px;
+} 
+
+.miinformacion span{
+  color: black;
+} 
+
 .titulotarea + span{
   display: block;
   font-size: 0.875rem;

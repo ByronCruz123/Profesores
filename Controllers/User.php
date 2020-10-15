@@ -28,6 +28,7 @@ if (!empty($_POST)) {
                 $_SESSION['active'] = true;
                 $_SESSION['iduser'] = $data['id'];
                 $_SESSION['nombre'] = $data['nombre'];
+                $_SESSION['apellido'] = $data['apellido'];
                 $_SESSION['user'] = $data['user'];
 
                 echo "correcto";

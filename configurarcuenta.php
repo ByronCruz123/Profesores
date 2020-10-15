@@ -102,19 +102,20 @@ if (!isset($_SESSION['user'])) {
     <!--CONTENIDO-->
     <main class="container tareas">
 
-        <div class="tarea">
-            <!-- Contenido Dinamico -->
-
-
-
-
-
-
+        <br>
+        <div>
+            <h1 class="titulotarea grayclaro">Información de mi cuenta</h1>
+            <div class="miinformacion mt-4">
+                <h1 class="titulotarea grayclaro">Mi Nombre: <span><?php echo $_SESSION['nombre'];?></span></h1>
+                <h1 class="titulotarea grayclaro">Mi Apellido: <span><?php echo $_SESSION['apellido'];?></span></h1>
+                <h1 class="titulotarea grayclaro">Mi Noombre de Usuario: <span><?php echo $_SESSION['user'];?></span></h1>
+                <h1 class="titulotarea grayclaro">Mi Codigo: <span><?php echo $_SESSION['iduser'];?></span></h1>
+            </div>
         </div>
 
     </main>
 
- 
+
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="navbar">
